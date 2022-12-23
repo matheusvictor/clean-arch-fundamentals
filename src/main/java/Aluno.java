@@ -1,6 +1,6 @@
 public class Aluno {
 
-    private String cpf;
+    private Cpf cpf;
     private String nome;
     private Email email;
 }
