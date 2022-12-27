@@ -1,3 +1,5 @@
+package escola.valueobjects;
+
 public class Cpf {
 
     private String numero;

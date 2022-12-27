@@ -1,3 +1,5 @@
+package escola.valueobjects;
+
 public class Email {
 
     private String endereco;
