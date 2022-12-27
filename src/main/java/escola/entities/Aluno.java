@@ -1,5 +1,11 @@
-import java.util.ArrayList;
+package escola.entities;
+
+import escola.valueobjects.Cpf;
+import escola.valueobjects.Email;
+import escola.valueobjects.Telefone;
+
 import java.util.List;
+import java.util.ArrayList;
 
 public class Aluno {
 
@@ -7,6 +13,12 @@ public class Aluno {
     private String nome;
     private Email email;
     private final List<Telefone> telefones = new ArrayList<>();
+
+    public Aluno(Cpf cpf, String nome, Email email) {
+        this.cpf = cpf;
+        this.nome = nome;
+        this.email = email;
+    }
 
     public void adicionarTelefone(Telefone telefone) {
         //TODO
