@@ -1,14 +1,17 @@
 package br.com.alura.escola.infra.aluno;
 
 import br.com.alura.escola.dominio.aluno.entities.Aluno;
+import br.com.alura.escola.dominio.aluno.exceptions.AlunoNaoEncontradoException;
 import br.com.alura.escola.dominio.aluno.valueobjects.Cpf;
 import br.com.alura.escola.dominio.aluno.repository.AlunoRepository;
+import br.com.alura.escola.dominio.aluno.valueobjects.Email;
 import br.com.alura.escola.dominio.aluno.valueobjects.Telefone;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RepositorioDeAlunos implements AlunoRepository {
@@ -21,8 +24,9 @@ public class RepositorioDeAlunos implements AlunoRepository {
 
     @Override
     public void matricular(Aluno aluno) {
-        String sqlQuery = "INSERT INTO aluno VALUES(?, ?, ?)";
+
         try {
+            String sqlQuery = "INSERT INTO ALUNO VALUES(?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
             preparedStatement.setString(1, aluno.getCpf());
             preparedStatement.setString(2, aluno.getNome());
@@ -45,10 +49,9 @@ public class RepositorioDeAlunos implements AlunoRepository {
 
     @Override
     public Aluno buscarPorCpf(Cpf cpf) {
-        // TODO: finalizar implementação
-        String sqlQuery = "SELECT id, nome, email FROM aluno WHERE cpf = ?";
 
         try {
+            String sqlQuery = "SELECT id, nome, email FROM ALUNO WHERE cpf = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
             preparedStatement.setString(1, cpf.getNumero());
 
@@ -56,19 +59,69 @@ public class RepositorioDeAlunos implements AlunoRepository {
             boolean encontrouAluno = result.next();
 
             if (!encontrouAluno) {
+                throw new AlunoNaoEncontradoException(cpf);
             }
+
+            String nomeAluno = result.getString("nome");
+            Email email = new Email(result.getString("email"));
+
+            Aluno alunoEcontrado = new Aluno(cpf, nomeAluno, email);
+
+            long id = result.getLong("id");
+            sqlQuery = "SELECT ddd, numero FROM TELEFONE WHERE aluno_id = ?";
+            preparedStatement = connection.prepareStatement(sqlQuery);
+            preparedStatement.setLong(1, id);
+            result = preparedStatement.executeQuery();
+
+            while (result.next()) {
+                String ddd = result.getString("dddd");
+                String numero = result.getString("numero");
+                alunoEcontrado.adicionarTelefone(ddd, numero);
+            }
+
+            return alunoEcontrado;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return null;
     }
 
     @Override
     public List<Aluno> listarAlunosMatriculados() {
-        // TODO: implementar
-        return null;
+
+        try {
+            String sqlQuery = "SELECT id, cpf, nome, email FROM ALUNO";
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+            ResultSet result = preparedStatement.executeQuery();
+
+            List<Aluno> alunos = new ArrayList<>();
+
+            while (result.next()) {
+                Cpf cpf = new Cpf(result.getString("cpf"));
+                String nome = result.getString("nome");
+                Email email = new Email(result.getString("email"));
+
+                Aluno aluno = new Aluno(cpf, nome, email);
+
+                long id = result.getLong("id");
+                sqlQuery = "SELECT ddd, numero FROM TELEFONE WHERE aluno_id = ?";
+                preparedStatement = connection.prepareStatement(sqlQuery);
+                preparedStatement.setLong(1, id);
+                result = preparedStatement.executeQuery();
+
+                while (result.next()) {
+                    String ddd = result.getString("dddd");
+                    String numero = result.getString("numero");
+                }
+
+                alunos.add(aluno);
+            }
+
+            return alunos;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
