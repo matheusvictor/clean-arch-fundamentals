@@ -1,8 +1,8 @@
-package escola.entities;
+package br.com.alura.escola.dominio.aluno.entities;
 
-import escola.valueobjects.Cpf;
-import escola.valueobjects.Email;
-import escola.valueobjects.Telefone;
+import br.com.alura.escola.dominio.aluno.valueobjects.Cpf;
+import br.com.alura.escola.dominio.aluno.valueobjects.Email;
+import br.com.alura.escola.dominio.aluno.valueobjects.Telefone;
 
 import java.util.List;
 import java.util.ArrayList;

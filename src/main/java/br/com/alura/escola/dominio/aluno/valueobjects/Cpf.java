@@ -1,4 +1,4 @@
-package escola.valueobjects;
+package br.com.alura.escola.dominio.aluno.valueobjects;
 
 public class Cpf {
 

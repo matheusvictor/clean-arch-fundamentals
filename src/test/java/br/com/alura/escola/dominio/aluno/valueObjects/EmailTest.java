@@ -1,4 +1,6 @@
-import escola.valueobjects.Email;
+package br.com.alura.escola.dominio.aluno.valueObjects;
+
+import br.com.alura.escola.dominio.aluno.valueobjects.Email;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
