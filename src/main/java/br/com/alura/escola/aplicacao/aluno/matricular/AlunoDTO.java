@@ -20,4 +20,15 @@ public class AlunoDTO {
         return new Aluno(new Cpf(cpf), nome, new Email(email));
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }
